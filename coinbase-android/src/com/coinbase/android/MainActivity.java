@@ -723,31 +723,42 @@ public class MainActivity extends CoinbaseActivity implements AccountsFragment.P
       return position;
     }
 
+    private static class ViewHolder {
+      public TextView title;
+      public ImageView icon;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
       if(convertView == null) {
         convertView = View.inflate(MainActivity.this, R.layout.activity_main_menu_item, null);
       }
-
-      TextView title = (TextView) convertView.findViewById(R.id.main_menu_item_title);
-      ImageView icon = (ImageView) convertView.findViewById(R.id.main_menu_item_icon);
+      
+      View holder = (ViewHolder) convertView.getTag();
+      
+      if( null == holder ) {
+        holder = new ViewHolder();
+        holder.title = (TextView) convertView.findViewById(R.id.main_menu_item_title);
+        holder.icon  = (ImageView) convertView.findViewById(R.id.main_menu_item_icon);
+        convertView.setTag(holder);
+      }
 
       int fragment = items[position];
 
       if(fragment == -1) {
         // Spacer
-        title.setText(null);
-        icon.setImageDrawable(null);
+        holder.title.setText(null);
+        holder.icon.setImageDrawable(null);
         return convertView;
       }
 
       String name = getString(mFragmentTitles[fragment]);
-      title.setText(name);
-      title.setTypeface(FontManager.getFont(MainActivity.this, "Roboto-Light"));
+      holder.title.setText(name);
+      holder.title.setTypeface(FontManager.getFont(MainActivity.this, "Roboto-Light"));
 
-      icon.setImageResource(mFragmentIcons[fragment]);
-      icon.setColorFilter(getResources().getColor(R.color.drawer_item_color), Mode.MULTIPLY);
+      holder.icon.setImageResource(mFragmentIcons[fragment]);
+      holder.icon.setColorFilter(getResources().getColor(R.color.drawer_item_color), Mode.MULTIPLY);
 
       return convertView;
     }
